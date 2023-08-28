@@ -20,7 +20,8 @@ class AuthController extends Controller
            if($user->status === 'admin'){
                  return $this->success([
                     'name' => $user->name,
-                    'type' => $user->status
+                    'type' => $user->status,
+                    'token' => $user->createToken('API Token of '.$user->name)->plainTextToken,
                  ]);
            }
            else{
@@ -31,6 +32,10 @@ class AuthController extends Controller
         else{
             return $this->error('',401,'Authentication Failed');
         }
+    }
+
+    public function CreateAdmin(){
+
     }
 
 }
