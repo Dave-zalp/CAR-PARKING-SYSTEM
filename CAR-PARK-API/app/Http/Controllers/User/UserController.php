@@ -15,39 +15,45 @@ class UserController extends Controller
 {
     use HttpResponses;
     public function register(RegisterRequest $request){
-        $request->validated($request->all());
+      $validated =   $request->validated();
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'Phone' => $request->phone,
-            'Address1' => $request->Address1,
-            'Address2' => $request->Address2,
-            'kin_name' => $request->kin_name,
-            'kin_number' => $request->kin_phone,
-            'kin_email' => $request->kin_email,
-            'kin_address' => $request->kin_address,
-            'password' => Hash::make($request->password)
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'Phone' => $validated['phone'],
+            'Address1' => $validated['Address1'],
+            'Address2' => $validated['Address2'],
+            'kin_name' => $validated['kin_name'],
+            'kin_number' => $validated['kin_phone'],
+            'kin_email' => $validated['kin_email'],
+            'kin_address' => $validated['kin_address'],
+            'password' => Hash::make($validated['password'])
         ]);
+
+        $user_agent = $request->userAgent();
 
 
         return $this->success([
             'user' => $user,
-            'token' => $user->createToken('API Token of '.$user->name)->plainTextToken,
+            'token' => $user->createToken($user_agent)->plainTextToken,
         ]);
     }
 
     public function login(LoginRequest $request){
-        $request->validated($request->all());
-        if(!Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+
+       $request->validated();
+        $credentials = $request->only('email', 'password');
+        if(!Auth::attempt($credentials)){
             return $this->error('',401,'Credentials do not match !!');
         }
-        else{
-            $user = User::where('email',$request->email)->first();
+
+            $user = User::where('email', $request->email)->first();
+            $user_agent = $request->userAgent();
+
             return $this->success([
                 'user' => $user,
-                'token' => $user->createToken('API Token of '.$user->name)->plainTextToken,
+                'token' => $user->createToken($user_agent)->plainTextToken,
             ],'Login Successful');
-        }
+
     }
 }

@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Parking_Space extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
-    protected $fillable = ['Address','status','bill_per_min'];
-    
+    protected $fillable = ['Space_name','status','Bill_per_minute'];
+
 }

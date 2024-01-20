@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\User\UserController;
-use App\Http\Middleware\AdminAuthMiddleware;
+use App\Http\Controllers\ParkingController;
+use App\Http\Controllers\SpaceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\AdminAuthMiddleware;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::group(['prefix' => 'v1' ], function(){
+
     Route::group(['prefix' => 'user' ], function(){
         Route::post('/register', [UserController::class, 'register']);
         Route::post('/login', [UserController::class, 'login']);
@@ -31,12 +34,15 @@ Route::group(['prefix' => 'v1' ], function(){
 
     Route::group(['prefix' => 'admin' ], function(){
         Route::post('/login', [AuthController::class, 'login']);
+        Route::apiResources(['space' => ParkingController::class]);
+        Route::get('/active/space', SpaceController::class);
+
     });
 
 
-    Route::group(['middleware' => 'auth:sanctum','adminVerify'], function () {
+
         Route::apiResources(['admin' => AdminController::class]);
-      });
+
 
 
 });

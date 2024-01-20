@@ -22,16 +22,16 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required'],
-            'email' => ['required' , 'email'],
-            'phone' => ['required'],
-            'Address1' => ['required'],
-            'Address2' => ['required'],
-            'kin_name' => ['required'],
-            'kin_phone' => ['required'],
-            'kin_email' => ['required'],
-            'kin_address' => ['required'],
-            'password' => ['required']
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required' , 'email', 'string', 'max:255', 'unique:users,email'],
+            'phone' => ['required', 'string', 'max:20'],
+            'Address1' => ['required', 'string', 'max:255'],
+            'Address2' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'kin_name' => ['required', 'string', 'max:255'],
+            'kin_phone' => ['required', 'string', 'max:20'],
+            'kin_email' => ['required', 'string', 'email', 'max:255'],
+            'kin_address' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'min:8'],
         ];
     }
 }
